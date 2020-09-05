@@ -123,7 +123,7 @@ class ScreenManager:
     def reportStatus(self):
         status = self.getScreenStatus()
         asyncio.run_coroutine_threadsafe(
-            self.publish(status, STATE_TOPIC, DEFAULT_QOS, True), self.loop
+            self.publish(STATE_TOPIC, status, DEFAULT_QOS, True), self.loop
         )
 
     async def publish(self, topic: str, payload, qos: int, retain: bool):
