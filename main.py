@@ -156,9 +156,9 @@ class ScreenManager:
             return "error"
 
         if OFF_STATUS in result.decode():
-            return "off"
+            return "OFF"
         elif ON_STATUS in result.decode():
-            return "on"
+            return "ON"
         else:
             return "unknown"
 
