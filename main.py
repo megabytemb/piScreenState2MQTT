@@ -118,10 +118,12 @@ class ScreenManager:
         return result
 
     def turnOnScreen(self):
+        _LOGGER.info("Turning screen ON")
         subprocess.check_output(ON_COMMAND.split(" "))
         self.reportStatus()
 
     def turnOffScreen(self):
+        _LOGGER.info("Turning screen OFF")
         subprocess.check_output(OFF_COMMAND.split(" "))
         self.reportStatus()
 
