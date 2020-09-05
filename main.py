@@ -122,11 +122,9 @@ class ScreenManager:
 
     def reportStatus(self):
         status = self.getScreenStatus()
-        future = self.loop.call_soon_threadsafe(
-            self.publish, status, STATE_TOPIC, DEFAULT_QOS, True
+        asyncio.run_coroutine_threadsafe(
+            self.publish(status, STATE_TOPIC, DEFAULT_QOS, True), self.loop
         )
-        result = future.result(None)
-
 
     async def publish(self, topic: str, payload, qos: int, retain: bool):
         async with self._paho_lock:
