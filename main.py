@@ -94,12 +94,17 @@ class ScreenManager:
         )
 
     def _mqtt_on_message(self, _mqttc, _userdata, msg):
-        _LOGGER.debug(
+        _LOGGER.info(
             "Received message on %s%s: %s",
             msg.topic,
             " (retained)" if msg.retain else "",
             msg.payload,
         )
+        if msg.topic == COMMAND_TOPIC:
+            if msg.payload == "ON":
+                self.turnOnScreen()
+            elif msg.payload == "OFF":
+                self.turnOffScreen()
 
     def _mqtt_on_callback(self, _mqttc, _userdata, mid, _granted_qos=None):
         pass
