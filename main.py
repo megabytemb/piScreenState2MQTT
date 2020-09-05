@@ -140,9 +140,9 @@ class ScreenManager:
 
     def getScreenStatus(self):
         result = subprocess.check_output(CHECK_COMMAND.split(" "))
-        if OFF_STATUS in result:
+        if OFF_STATUS in result.decode():
             return "off"
-        elif ON_STATUS in result:
+        elif ON_STATUS in result.decode():
             return "on"
         else:
             return "unknown"
