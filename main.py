@@ -100,10 +100,14 @@ class ScreenManager:
             " (retained)" if msg.retain else "",
             msg.payload,
         )
-        if msg.topic == COMMAND_TOPIC:
-            if msg.payload == "ON":
+
+        topic = msg.topic
+        payload = msg.payload.decode()
+
+        if topic == COMMAND_TOPIC:
+            if payload == "ON":
                 self.turnOnScreen()
-            elif msg.payload == "OFF":
+            elif payload == "OFF":
                 self.turnOffScreen()
 
     def _mqtt_on_callback(self, _mqttc, _userdata, mid, _granted_qos=None):
@@ -146,7 +150,11 @@ class ScreenManager:
             )
 
     def getScreenStatus(self):
-        result = subprocess.check_output(CHECK_COMMAND.split(" "))
+        try:
+            result = subprocess.check_output(CHECK_COMMAND.split(" "))
+        except:
+            return "error"
+
         if OFF_STATUS in result.decode():
             return "off"
         elif ON_STATUS in result.decode():
