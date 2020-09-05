@@ -18,6 +18,7 @@ CHECK_COMMAND = "xset -display :0.0 q"
 OFF_STATUS = "Monitor is Off"
 ON_STATUS = "Monitor is On"
 
+
 class ScreenManager:
     def __init__(self, loop):
         self.loop = loop
@@ -110,29 +111,33 @@ class ScreenManager:
             )
             _LOGGER.info("Subscribing to %s, mid: %s", topic, mid)
         return result
-    
+
     def turnOnScreen(self):
         subprocess.check_output(ON_COMMAND.split(" "))
         self.reportStatus()
-    
-    def turnOnScreen(self):
+
+    def turnOffScreen(self):
         subprocess.check_output(OFF_COMMAND.split(" "))
         self.reportStatus()
 
     def reportStatus(self):
         status = self.getScreenStatus()
-        self.loop.call_soon_threadsafe(self.publish, status, STATE_TOPIC, DEFAULT_QOS, True)
-    
+        self.loop.call_soon_threadsafe(
+            self.publish, status, STATE_TOPIC, DEFAULT_QOS, True
+        )
+
     async def publish(self, topic: str, payload, qos: int, retain: bool):
         async with self._paho_lock:
-            msg_info = await self.loop.run_in_executor(None, self._mqttc.publish, topic, payload, qos, retain)
+            msg_info = await self.loop.run_in_executor(
+                None, self._mqttc.publish, topic, payload, qos, retain
+            )
             _LOGGER.info(
                 "Transmitting message on %s: '%s', mid: %s",
                 topic,
                 payload,
                 msg_info.mid,
             )
-    
+
     def getScreenStatus(self):
         result = subprocess.check_output(CHECK_COMMAND.split(" "))
         if OFF_STATUS in result:
@@ -141,7 +146,6 @@ class ScreenManager:
             return "on"
         else:
             return "unknown"
-        
 
 
 def main():
